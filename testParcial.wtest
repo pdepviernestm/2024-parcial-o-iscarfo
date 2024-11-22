@@ -1,0 +1,89 @@
+import example.*
+import persona.*
+import emociones.*
+import grupos.*
+import evento.*
+
+//Punto 1
+test "Riley (sin emociones) esta en la etapa de adolescencia"{
+  const riley = new Persona (emociones=[],edad=15,cantEventosVividos=0)
+  assert.that(riley.esAdolescente())
+}
+
+//Punto 2
+test "Riley (sin emociones) se le puede agregar una emocion de alegria
+y pasa a tener una emocion"{
+  const riley = new Persona (emociones=[],edad=15,cantEventosVividos=0)
+  const alegria = new Alegria (intensidad=10,
+  valorElevado=5,cantEventosVividos=0)
+
+  riley.tenerNuevaEmocion(alegria)
+
+  assert.that(riley.darEmociones().size()==1)
+}
+
+//Punto 3 
+test "Riley con alegria esta por explotar pero con alegria y tristeza
+no lo esta"{
+  const alegria = new Alegria (intensidad=10,
+  valorElevado=5,cantEventosVividos=0)
+  const tristeza = new Tristeza (intensidad=10,
+  valorElevado=5,cantEventosVividos=0)
+  const riley1 = new Persona (emociones=[alegria,tristeza],
+  edad=15,cantEventosVividos=0)
+  const riley2 = new Persona (emociones=[alegria],
+  edad=15,cantEventosVividos=0)
+
+  assert.that(!riley1.estaPorExplotar())
+  assert.that(riley2.estaPorExplotar())
+}
+
+//Punto 4
+test "Si riley vive un evento con alegria, luego del evento no tiene mas
+emociones y alegria pasa a tener un evento vivido y menor intensidad"{
+  const alegria = new Alegria (intensidad=10,
+  valorElevado=5,cantEventosVividos=0)
+  const riley2 = new Persona (emociones=[alegria],
+  edad=15,cantEventosVividos=0)
+
+  const evento = new Evento (descripcion="Prueba de Matematica",impacto=5)
+
+  riley2.vivirEvento(evento)
+
+  assert.that(alegria.cuantosEventosVivio()==1) 
+  assert.that(!alegria.puedeLiberarse())
+  //Ya que vive un evento por lo cual su cantidad de eventos vividos ya no es par
+
+}
+
+//Punto 5
+test "El valor para considerar elevada la intensidad puede modificarse"{
+  const alegria = new Alegria (intensidad=10,
+  valorElevado=5,cantEventosVividos=0)
+
+  assert.that(alegria.puedeLiberarse())
+
+  alegria.cambiarValorElevado(11)
+
+  assert.that(!alegria.puedeLiberarse())
+}
+
+//Punto 6:
+test "Un grupo de personas pueden vivir un mismo evento"{
+  const alegria = new Alegria (intensidad=10,
+  valorElevado=5,cantEventosVividos=0)
+  const tristeza = new Tristeza (intensidad=10,
+  valorElevado=5,cantEventosVividos=0)
+  const riley2 = new Persona (emociones=[alegria],
+  edad=15,cantEventosVividos=0)
+  const riley1 = new Persona (emociones=[alegria,tristeza],
+  edad=15,cantEventosVividos=0)
+
+  const grupo = new Grupo (integrantes=[riley1,riley2])
+
+  const evento = new Evento (descripcion="Prueba de Matematica",impacto=5)
+  
+  grupo.vivirEvento(evento)
+
+  assert.that(alegria.cantEventosVividos()==2)
+}
