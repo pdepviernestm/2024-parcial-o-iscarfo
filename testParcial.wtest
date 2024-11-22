@@ -85,5 +85,5 @@ test "Un grupo de personas pueden vivir un mismo evento"{
   
   grupo.vivirEvento(evento)
 
-  assert.that(alegria.cantEventosVividos()==2)
+  assert.that(alegria.cuantosEventosVivio()==2)
 }
